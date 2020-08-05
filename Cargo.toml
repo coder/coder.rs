@@ -2,7 +2,7 @@
 name = "coder"
 authors = ["Colin Adler <colin@coder.com>"]
 description = "Pure Rust bindings to the Coder Enterprise API"
-version = "0.1.0"
+version = "0.2.0"
 license = "MIT"
 homepage = "https://coder.com"
 edition = "2018"
