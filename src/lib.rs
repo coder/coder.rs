@@ -1,6 +1,6 @@
 //! ![crates.io](https://img.shields.io/crates/v/coder.svg) ![docs.rs](https://docs.rs/coder/badge.svg)
 //!
-//! A pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
+//! An asynchronous, pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
 //!
 //! ## Installation
 //!
