@@ -1,9 +1,10 @@
-# coder.rs
+# coder
 
-`coder.rs` is a pure Rust wrapper around the [Coder](https://coder.com) On-Prem
-API.
+![crates.io](https://img.shields.io/crates/v/coder.svg) ![docs.rs](https://docs.rs/coder/badge.svg)
 
-## Installation
+A pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
+
+### Installation
 
 Coder.rs has been tested to work on Rust 1.40+
 
@@ -13,7 +14,7 @@ Add this to your `Cargo.toml`'s `[dependencies]` section:
 coder = { version = "0.2", features = ["rustls"] }
 ```
 
-## Usage
+### Usage
 
 Coder provides the [`coder::Coder`](https://docs.rs/coder/latest/coder/client/struct.Coder.html)
 struct for creating requests.
@@ -71,7 +72,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
 // }
 ```
 
-## Features
+### Features
 
 * `rustls` - Uses the [`rustls`](https://docs.rs/rustls/) pure Rust TLS implementation. (default)
 * `rust-native-tls` - Uses [`native-tls`](https://docs.rs/native-tls/) for TLS which links against the OS default.
+
+License: MIT
