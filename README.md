@@ -23,7 +23,6 @@ use std::env;
 use std::error::Error;
 
 use coder::client::{Coder, Executor};
-use coder::client::Executor;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
