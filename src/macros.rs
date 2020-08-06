@@ -11,8 +11,8 @@
 //!
 //! // Define request builder types.
 //! new_builder!(
-//!     User
-//!     Users
+//!     User,
+//!     Users,
 //! );
 //!
 //! // Request builders we intend to extend must be imported separately.
@@ -21,21 +21,21 @@
 //! // Generate `From<GetQueryBuilder>` implementations for our request builders.
 //! from!(
 //!     @GetQuery
-//!         => User
-//!         => Users
+//!         => User,
+//!         => Users,
 //! );
 //!
 //! // Implement methods on GetQueryBuilder for accessing our new request builder types.
 //! impl_macro!(
 //!     @GetQuery
-//!         |-> users ["users"] -> Users
-//!         |=> user  ["users"] -> User = id
+//!         |-> users ["users"] -> Users,
+//!         |=> user  ["users"] -> User = id,
 //! );
 //!
 //! // Mark request builders as executable and specify the return type.
 //! exec!(
-//!     User  -> crate::models::User
-//!     Users -> Vec<crate::models::User>
+//!     User  -> crate::models::User,
+//!     Users -> Vec<crate::models::User>,
 //! );
 //! ```
 
@@ -67,18 +67,16 @@ macro_rules! imports {
 ///
 /// ```
 /// new_builder!(
-///     /// Queries a user by their id.
-///     User
-///     /// Queries all users.
-///     Users
+///     User,
+///     /// Documentation is passed through!
+///     Users,
 /// );
 ///
 /// // Expands to ...
 ///
-/// /// Queries a user by their id.
 /// pub struct UserBuilder { ... }
 /// unsafe impl Send for UserBuilder {}
-/// /// Queries all users.
+/// /// Documentation is passed through!
 /// pub struct UsersBuilder { ... }
 /// unsafe impl Send for UsersBuilder {}
 /// ```
@@ -99,7 +97,7 @@ macro_rules! new_builder {
 }
 
 /// Marks a request builder as executable by implementing the `Executor` trait and specifying a
-/// return type.
+/// return type. Documentation is passed through.
 ///
 /// # Example
 ///
@@ -108,9 +106,10 @@ macro_rules! new_builder {
 /// // builder     return type (implements serde::Deserialize)
 /// //   ||             ||
 /// //   \/             \/
-///     User     -> models::User      // Returns a struct.
-///     Users    -> Vec<models::User> // Returns an array of structs.
-///     NoReturn -> ()                // Returns no body.
+///     User     -> models::User,      // Returns a struct.
+///     Users    -> Vec<models::User>, // Returns an array of structs.
+///     /// Documentation is passed through!
+///     NoReturn -> (),                // Returns no body.
 /// );
 ///
 /// // Expands to ...
@@ -125,6 +124,7 @@ macro_rules! new_builder {
 ///
 ///     async fn execute(self) -> Result<ApiResponse<Vec<models::User>>, Box<dyn Error>> { ... }
 /// }
+/// /// Documentation is passed through!
 /// impl Executor for NoReturnBuilder {
 ///     type T = ();
 ///
@@ -132,8 +132,13 @@ macro_rules! new_builder {
 /// }
 /// ```
 macro_rules! exec {
-    ($($i: ident -> $t: ty)*) => (
+    ($(
+        $(#[$doc:meta])*
+        $i: ident -> $t: ty
+    ),* $(,)?
+    ) => (
         paste! {$(
+            $(#[$doc])*
             #[async_trait]
             impl Executor for [<$i Builder>] {
                 type T = $t;
@@ -163,7 +168,8 @@ macro_rules! exec {
 }
 
 /// Generates `From<T>` implementations for converting typed request builders into other typed
-/// request builders. The implementations here are used in the `impl_macro!` macro.
+/// request builders. The implementations here are used in the `impl_macro!` macro. Documentation
+/// is passed through for target builders.
 ///
 /// # Example
 ///
@@ -173,8 +179,9 @@ macro_rules! exec {
 ///     //    ||
 ///     //    \/
 ///     @GetQuery
-///         => User // <= target builder
-///         => Users
+///         => User, // <= target builder
+///         /// Documentation is passed through!
+///         => Users,
 /// );
 ///
 /// // Expands to ...
@@ -182,15 +189,20 @@ macro_rules! exec {
 /// impl From<GetQueryBuilder> for UserBuilder {
 ///     fn from(f: GetQueryBuilder) -> Self { ... }
 /// }
+/// /// Documentation is passed through!
 /// impl From<GetQueryBuilder> for UsersBuilder {
 ///     fn from(f: GetQueryBuilder) -> Self { ... }
 /// }
 /// ```
 macro_rules! from {
     ($(@$f: ident
-        $( => $t: ident )+
+        $(
+            $(#[$doc:meta])*
+            => $t: ident
+        ),+ $(,)?
     )+) => {
         $($(paste! {
+            $(#[$doc])*
             impl From<[<$f Builder>]> for [<$t Builder>] {
                 fn from(f: [<$f Builder>]) -> Self {
                     Self {
@@ -221,50 +233,59 @@ macro_rules! from {
 ///         //
 ///         // method name      new builder
 ///         //  ||   route path     ||
-///         //  ||       ||         || route variable name
-///         //  \/       \/         \/      ||
-///         |-> users ["users"] -> Users // \/
-///         |=> user  ["users"] -> User =   id
+///         //  ||       ||         ||  route variable name
+///         //  \/       \/         \/          ||
+///         |-> users ["users"] -> Users,    // ||
+///         /// Docs are passed through too!    \/
+///         |=> user  ["users"] -> User       = id,
 /// );
 ///
 /// // Expands to ...
 ///
 /// impl GetQueryBuilder {
 ///     pub fn users(mut self) -> UsersBuilder { ... }
+///     /// Docs are passed through too!
 ///     pub fn user<T: ToString>(mut self, id: T) -> UserBuilder { ... }
 /// }
 /// ```
+
 macro_rules! impl_macro {
     // This first line should contain @ and the struct we are implementing from, like @GetQuery.
     // The struct should have been generated from the new_builder! macro.
     ($(@$i: ident
+       $(
+           $(#[$doc:meta])*
+            // Case 1
+            // This case is for methods that don't need a route variable such as getting all users.
+            // The syntax looks like: `|-> <method name> [<route path>] -> <builder name>`.
+            // Builder name should be a struct generated by the new_builder! macro.
+            $(|-> $id1:ident [$p1:literal] -> $t1:ident)?
 
-        // Case 1
-        // This case is for methods that don't need a route variable such as getting all users.
-        // The syntax looks like: `|-> <method name> [<route path>] -> <builder name>`.
-        // Builder name should be a struct generated by the new_builder! macro.
-        $(|-> $id1:ident [$p1:literal] -> $t1:ident)*
-
-        // Case 2
-        // This case is for methods that need a route variable such as getting a user by id.
-        // The syntax looks like: `|=> <method name> [<route path>] -> <builder name> = <path variable name>`
-        // Builder name should be a struct generated by the new_builder! macro.
-        $(|=> $id2:ident [$p2:literal] -> $t2:ident = $e2:ident)*
+            // Case 2
+            // This case is for methods that need a route variable such as getting a user by id.
+            // The syntax looks like: `|=> <method name> [<route path>] -> <builder name> = <path variable name>`
+            // Builder name should be a struct generated by the new_builder! macro.
+            $(|=> $id2:ident [$p2:literal] -> $t2:ident = $e2:ident)?
+        ),*
     )+)=> (
         $(paste! {
             impl [<$i Builder>] {
-            // Case 1
             $(
-                pub fn $id1(mut self) -> [<$t1 Builder>] {
-                    join_path!(self, &[$p1]);
-                    self.into()
-                }
-            // Case 2
-            )*$(
-                pub fn $id2<T: ToString>(mut self, $e2: T) -> [<$t2 Builder>] {
-                    join_path!(self, &[$p2, &$e2.to_string()]);
-                    self.into()
-                }
+                $(#[$doc])*
+                // Case 1
+                $(
+                    pub fn $id1(mut self) -> [<$t1 Builder>] {
+                        join_path!(self, &[$p1]);
+                        self.into()
+                    }
+                )?
+                // Case 2
+                $(
+                    pub fn $id2<T: ToString>(mut self, $e2: T) -> [<$t2 Builder>] {
+                        join_path!(self, &[$p2, &$e2.to_string()]);
+                        self.into()
+                    }
+                )?
             )*
             }
         })+

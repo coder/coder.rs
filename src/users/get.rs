@@ -1,31 +1,27 @@
 imports!();
 
-new_builder!(
-    /// Queries the current user.
-    Me,
-    /// Queries a user by their id.
-    User,
-    /// Queries all users.
-    Users,
-);
+new_builder!(Me, User, Users);
 
 use crate::client::GetQueryBuilder;
 
 exec!(
-    Me    -> crate::models::User
-    User  -> crate::models::User
-    Users -> Vec<crate::models::User>
+    Me    -> crate::models::User,
+    User  -> crate::models::User,
+    Users -> Vec<crate::models::User>,
 );
 
 from!(
     @GetQuery
-        => User
-        => Users
+        => User,
+        => Users,
 );
 
 impl_macro!(
     @GetQuery
-        |-> me    ["users/me"] -> User
-        |-> users ["users"]    -> Users
-        |=> user  ["users"]    -> User = id
+        /// Queries the current user.
+        |-> me    ["users/me"] -> User,
+        /// Queries all users.
+        |-> users ["users"]    -> Users,
+        /// Queries a user by their id.
+        |=> user  ["users"]    -> User = id,
 );
