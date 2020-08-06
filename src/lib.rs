@@ -11,6 +11,9 @@
 //!
 //! An asynchronous, pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
 //!
+//! This is currently experimental. Not all routes have been implemented and the API is expected to
+//! change.
+//!
 //! ## Installation
 //!
 //! Coder.rs has been tested to work on Rust 1.40+
