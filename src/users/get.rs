@@ -1,6 +1,13 @@
 imports!();
 
-new_builder!(Me, User, Users);
+new_builder!(
+    /// Queries the current user.
+    Me,
+    /// Queries a user by their id.
+    User,
+    /// Queries all users.
+    Users,
+);
 
 use crate::client::GetQueryBuilder;
 

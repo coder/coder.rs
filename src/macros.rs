@@ -61,29 +61,40 @@ macro_rules! imports {
     };
 }
 
-/// Specifies new request builders.
+/// Specifies new request builders. Documentation is passed through.
+///
+/// # Example
+///
 /// ```
 /// new_builder!(
+///     /// Queries a user by their id.
 ///     User
+///     /// Queries all users.
 ///     Users
 /// );
 ///
 /// // Expands to ...
 ///
+/// /// Queries a user by their id.
 /// pub struct UserBuilder { ... }
 /// unsafe impl Send for UserBuilder {}
+/// /// Queries all users.
 /// pub struct UsersBuilder { ... }
 /// unsafe impl Send for UsersBuilder {}
 /// ```
 macro_rules! new_builder {
-    ($($i: ident),*) => (
-        paste! {$(
+    ($(
+        $(#[$doc:meta])*
+        $i: ident
+    ),* $(,)?) => (
+        $(paste! {
+            $(#[$doc])*
             pub struct [<$i Builder>] {
                 pub(crate) request: Result<RefCell<hyper::Request<hyper::Body>>, Box<dyn Error>>,
                 pub(crate) client: Arc<Client<HttpsConnector>>,
             }
             unsafe impl Send for [<$i Builder>] {}
-        )*}
+        })*
     );
 }
 
