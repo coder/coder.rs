@@ -12,16 +12,16 @@ exec!(
 
 from!(
     @GetQuery
-        => User,
-        => Users,
+        -> User,
+        -> Users,
 );
 
 impl_macro!(
     @GetQuery
         /// Queries the current user.
-        |-> me    ["users/me"] -> User,
+        -> me    ["users/me"] -> User,
         /// Queries all users.
-        |-> users ["users"]    -> Users,
+        -> users ["users"]    -> Users,
         /// Queries a user by their id.
-        |=> user  ["users"]    -> User = id,
+        => user  ["users"]    -> User = id,
 );

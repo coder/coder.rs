@@ -19,6 +19,8 @@ use async_trait::async_trait;
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 pub struct Coder {
     url: &'static str,
     token: &'static str,
@@ -55,9 +57,11 @@ pub trait Executor {
 const API_PREFIX: &'static str = "/api";
 
 impl Coder {
+    /// Starts a query to get a resource.
     pub fn get(&self) -> GetQueryBuilder {
         GetQueryBuilder {
             request: Request::get(format!("{}{}", self.url, API_PREFIX))
+                .header("User-Agent", format!("coder.rs {}", VERSION))
                 .header("Session-Token", self.token)
                 .body(Body::empty())
                 .map(|r| RefCell::new(r))
@@ -68,3 +72,22 @@ impl Coder {
 }
 
 new_builder!(GetQuery);
+
+#[cfg(test)]
+pub(crate) mod test {
+    pub(crate) mod ids {
+        pub const ORG_ID: &'static str = "default";
+        pub const USER_ID: &'static str = "5e876cf4-10abe9b2e54eb609c5ec1870";
+        pub const MEMBER_ID: &'static str = "5e876cf4-10abe9b2e54eb609c5ec1870";
+        pub const ENV_ID: &'static str = "5ed15061-d7d3db1d91600a4fed28f6ed";
+    }
+
+    use super::*;
+    use std::env;
+
+    pub fn client() -> Coder {
+        let url = env::var("MANAGER_URL").expect("no MANAGER_URL env provided");
+        let api_key = env::var("API_KEY").expect("no API_KEY env provided");
+        Coder::new(url, api_key)
+    }
+}

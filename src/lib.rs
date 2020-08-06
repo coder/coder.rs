@@ -29,7 +29,7 @@
 //! Coder provides the [`coder::Coder`](https://docs.rs/coder/latest/coder/client/struct.Coder.html)
 //! struct for creating requests.
 //!
-//! ```rust
+//! ```rust,ignore
 //! use std::env;
 //! use std::error::Error;
 //!
@@ -105,7 +105,6 @@ pub mod client;
 pub mod headers;
 pub mod models;
 
-pub mod orgs;
-pub mod users;
+pub mod builders;
 
 mod util;
