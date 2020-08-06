@@ -92,6 +92,8 @@ mod macros;
 pub mod client;
 pub mod headers;
 pub mod models;
+
+pub mod orgs;
 pub mod users;
 
 mod util;

@@ -57,12 +57,11 @@ const API_PREFIX: &'static str = "/api";
 impl Coder {
     pub fn get(&self) -> GetQueryBuilder {
         GetQueryBuilder {
-            request: Ok(RefCell::new(
-                Request::get(format!("{}{}", self.url, API_PREFIX))
-                    .header("Session-Token", self.token)
-                    .body(Body::empty())
-                    .unwrap(),
-            )),
+            request: Request::get(format!("{}{}", self.url, API_PREFIX))
+                .header("Session-Token", self.token)
+                .body(Body::empty())
+                .map(|r| RefCell::new(r))
+                .map_err(|e| Box::new(e) as Box<dyn Error>),
             client: Arc::clone(&self.client),
         }
     }

@@ -76,7 +76,7 @@ macro_rules! imports {
 /// unsafe impl Send for UsersBuilder {}
 /// ```
 macro_rules! new_builder {
-    ($($i: ident)*) => (
+    ($($i: ident),*) => (
         paste! {$(
             pub struct [<$i Builder>] {
                 pub(crate) request: Result<RefCell<hyper::Request<hyper::Body>>, Box<dyn Error>>,
@@ -203,9 +203,14 @@ macro_rules! from {
 ///     //    ||
 ///     //    \/
 ///     @GetQuery
+///         // There are two different types of impls we can generate:
+///         //   1. `|->` which generates an impl requiring no route variable.
+///         //   2. `|=>` which generates an impl requiring a route variable.
+///         //       The route variable will be appended to the provided route path.
+///         //
 ///         // method name      new builder
 ///         //  ||   route path     ||
-///         //  ||       ||         ||  route variable
+///         //  ||       ||         || route variable name
 ///         //  \/       \/         \/      ||
 ///         |-> users ["users"] -> Users // \/
 ///         |=> user  ["users"] -> User =   id

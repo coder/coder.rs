@@ -1,10 +1,6 @@
 imports!();
 
-new_builder!(
-    Me
-    User
-    Users
-);
+new_builder!(Me, User, Users);
 
 use crate::client::GetQueryBuilder;
 
