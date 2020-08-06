@@ -1,7 +1,7 @@
 # coder
 
-[![Crates.io](crates-badge)][crates-url]
-[![Docs.rs](https://docs.rs/coder/badge.svg)][docs-url]
+[![Crates.io][crates-badge]][crates-url]
+[![Docs.rs][docs-badge]][docs-url]
 [![MIT licensed][mit-badge]][mit-url]
 
 [crates-badge]: https://img.shields.io/crates/v/coder.svg
