@@ -1,4 +1,13 @@
-//! ![crates.io](https://img.shields.io/crates/v/coder.svg) ![docs.rs](https://docs.rs/coder/badge.svg)
+//! [![Crates.io](crates-badge)](crates-url)
+//! [![Docs.rs](https://docs.rs/coder/badge.svg)](docs-url)
+//! [![MIT licensed][mit-badge]][mit-url]
+//!
+//! [crates-badge]: https://img.shields.io/crates/v/coder.svg
+//! [crates-url]: https://crates.io/crates/coder
+//! [docs-badge]: https://docs.rs/coder/badge.svg
+//! [docs-url]: https://docs.rs/coder
+//! [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+//! [mit-url]: https://github.com/coadler/coder.rs/blob/master/LICENSE
 //!
 //! An asynchronous, pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
 //!
