@@ -2,8 +2,6 @@ imports!();
 
 new_builder!(Org, Orgs, Member, Members, Namespaces);
 
-use crate::client::GetQueryBuilder;
-
 exec!(
     Org -> crate::models::Organization,
     Orgs -> Vec<crate::models::Organization>,
@@ -15,34 +13,31 @@ exec!(
 );
 
 from!(
-    @GetQuery
-        -> Org,
-        -> Orgs,
-
-    @Org
-        -> Member,
-        -> Members,
-
     @Orgs
+        -> Org,
         -> Namespaces,
+    @Org
+        -> Members,
+    @Members
+        -> Member,
+);
+
+impl_client!(
+    /// Begins a organization query.
+    -> orgs ["orgs"] -> Orgs,
 );
 
 impl_builder!(
-    @GetQuery
-        /// Queries all orgs the user belongs to, or all if the user is a site admin.
-        -> orgs ["orgs"] -> Orgs,
+    @Orgs
         /// Queries an org by its id.
-        => org ["orgs"] -> Org = id,
-
+        => get [] -> Org = id,
+        /// Queries the available namespaces in an organization.
+        -> namespaces ["namespaces"] -> Namespaces,
     @Org
         /// Queries all members in an organization.
         -> members ["members"] -> Members,
-        /// Queries a organization member by their id.
-        => member ["members"] -> Member = id,
-
-    @Orgs
-        /// Queries the available namespaces in an organization.
-        -> namespaces ["namespaces"] -> Namespaces,
+    @Members
+        => get [] -> Member = user_id,
 );
 
 #[cfg(test)]
@@ -55,7 +50,6 @@ mod test {
         let c = client();
 
         let res = c
-            .get()
             .orgs()
             .execute()
             .await
@@ -76,8 +70,8 @@ mod test {
         let c = client();
 
         let res = c
-            .get()
-            .org(ORG_ID)
+            .orgs()
+            .get(ORG_ID)
             .execute()
             .await
             .expect("send request")
@@ -93,7 +87,6 @@ mod test {
         let c = client();
 
         let res = c
-            .get()
             .orgs()
             .namespaces()
             .execute()
@@ -118,8 +111,8 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .org(ORG_ID)
+                .orgs()
+                .get(ORG_ID)
                 .members()
                 .execute()
                 .await
@@ -140,9 +133,10 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .org(ORG_ID)
-                .member(MEMBER_ID)
+                .orgs()
+                .get(ORG_ID)
+                .members()
+                .get(MEMBER_ID)
                 .execute()
                 .await
                 .expect("send request")

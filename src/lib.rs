@@ -38,7 +38,7 @@
 //!     let api_key = env::var("API_KEY").unwrap();
 //!     let c = Coder::new(url, api_key);
 //!
-//!     let res = c.get().me().execute().await?;
+//!     let res = c.users().me().execute().await?;
 //!     dbg!(res);
 //!
 //!     Ok(())
@@ -99,9 +99,6 @@
 // #![allow(unused_macros)]
 // #![allow(unused_imports)]
 // #![allow(unused_variables)]
-
-#[macro_use]
-extern crate paste;
 
 #[macro_use]
 mod macros;

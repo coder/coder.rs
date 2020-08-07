@@ -1,29 +1,33 @@
 imports!();
 
-new_builder!(Image, Images);
+new_builder!(Image, OrgImages, GlobalImages);
 
 use crate::builders::orgs::get::OrgBuilder;
-use crate::client::GetQueryBuilder;
 
 exec!(
     Image  -> crate::models::Image,
-    Images -> Vec<crate::models::Image>,
+    OrgImages -> Vec<crate::models::Image>,
 );
 
 from!(
-    @GetQuery
-        -> Image,
     @Org
-        -> Images,
+        -> OrgImages,
+    @GlobalImages
+        -> Image,
+);
+
+impl_client!(
+    /// Begins a global image query.
+    -> images ["images"] -> GlobalImages,
 );
 
 impl_builder!(
-    @GetQuery
-        /// Queries an image by its id.
-        => image ["images"] -> Image = id,
     @Org
         /// Queries all images in an organization.
-        -> images ["images"] -> Images,
+        -> images ["images"] -> OrgImages,
+    @GlobalImages
+        /// Queries an image by its id.
+        => get [] -> Image = id,
 );
 
 #[cfg(test)]
@@ -36,8 +40,8 @@ mod test {
         let c = client();
 
         let res = c
-            .get()
-            .image(IMAGE_ID)
+            .images()
+            .get(IMAGE_ID)
             .execute()
             .await
             .expect("send request")
@@ -56,8 +60,8 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .org(ORG_ID)
+                .orgs()
+                .get(ORG_ID)
                 .images()
                 .execute()
                 .await

@@ -11,16 +11,18 @@ exec!(
 
 from!(
     @Org
-        -> Service,
         -> Services,
+    @Services
+        -> Service,
 );
 
 impl_builder!(
     @Org
         /// Queries all services in an organization.
         -> services ["services"] -> Services,
+    @Services
         /// Queries a service in an organization by its id.
-        => service ["services"] -> Service = id,
+        => get [] -> Service = id,
 );
 
 #[cfg(test)]
@@ -36,8 +38,8 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .org(ORG_ID)
+                .orgs()
+                .get(ORG_ID)
                 .services()
                 .execute()
                 .await
@@ -58,9 +60,10 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .org(ORG_ID)
-                .service(SERVICE_ID)
+                .orgs()
+                .get(ORG_ID)
+                .services()
+                .get(SERVICE_ID)
                 .execute()
                 .await
                 .expect("send request")

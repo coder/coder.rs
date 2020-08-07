@@ -24,7 +24,7 @@ const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 pub struct Coder {
     url: &'static str,
     token: &'static str,
-    client: Arc<Client<HttpsConnector>>,
+    pub(crate) client: Arc<Client<HttpsConnector>>,
 }
 
 impl Coder {
@@ -66,16 +66,7 @@ impl Coder {
             .body(Body::empty())
             .map(|r| RefCell::new(r))?)
     }
-    /// Starts a query to get a resource.
-    pub fn get(&self) -> GetQueryBuilder {
-        GetQueryBuilder {
-            request: self.new_request(),
-            client: Arc::clone(&self.client),
-        }
-    }
 }
-
-new_builder!(GetQuery);
 
 #[cfg(test)]
 pub(crate) mod test {

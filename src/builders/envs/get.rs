@@ -1,39 +1,44 @@
 imports!();
 
-new_builder!(Env, Envs);
+new_builder!(Env, OrgEnvs, GlobalEnvs, MemberEnvs);
 
 use crate::builders::orgs::get::MemberBuilder;
 use crate::builders::orgs::get::OrgBuilder;
-use crate::client::GetQueryBuilder;
 
 exec!(
     Env -> crate::models::Environment,
-    Envs -> Vec<crate::models::Environment>,
+    OrgEnvs -> Vec<crate::models::Environment>,
+    MemberEnvs -> Vec<crate::models::Environment>,
 );
 
 from!(
-    @GetQuery
-        -> Env,
     @Org
-        -> Envs,
+        -> OrgEnvs,
     @Member
-        -> Envs,
+        -> MemberEnvs,
+    @GlobalEnvs
+        -> Env,
+);
+
+impl_client!(
+    /// Begins an environments query.
+    -> envs ["environments"] -> GlobalEnvs,
 );
 
 impl_builder!(
-    @GetQuery
-        /// Queries an environment by its id. Must be a site admin or a manager of the organization
-        /// the environment belongs to.
-        => env ["environments"] -> Env = id,
-
     @Org
         /// Queries all environments belonging to the organization. Must be an organization
         /// manager.
-        -> envs ["environments"] -> Envs,
+        -> envs ["environments"] -> OrgEnvs,
 
     @Member
         /// Queries all environments belonging to the an organization member.
-        -> envs ["environments"] -> Envs,
+        -> envs ["environments"] -> MemberEnvs,
+
+    @GlobalEnvs
+        /// Queries an environment by its id. Must be a site admin or a manager of the organization
+        /// the environment belongs to.
+        => get [] -> Env = id,
 );
 
 #[cfg(test)]
@@ -46,8 +51,8 @@ mod test {
         let c = client();
 
         let res = c
-            .get()
-            .env(ENV_ID)
+            .envs()
+            .get(ENV_ID)
             .execute()
             .await
             .expect("send request")
@@ -66,8 +71,8 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .org(ORG_ID)
+                .orgs()
+                .get(ORG_ID)
                 .envs()
                 .execute()
                 .await
@@ -92,9 +97,10 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .org(ORG_ID)
-                .member(MEMBER_ID)
+                .orgs()
+                .get(ORG_ID)
+                .members()
+                .get(MEMBER_ID)
                 .envs()
                 .execute()
                 .await

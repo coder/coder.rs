@@ -11,16 +11,18 @@ exec!(
 
 from!(
     @Image
-        -> ImageTag,
         -> ImageTags,
+    @ImageTags
+        -> ImageTag,
 );
 
 impl_builder!(
     @Image
         /// Queries all image tags belonging to an image.
         -> tags ["tags"] -> ImageTags,
+    @ImageTags
         /// Queries an image tag by its tag.
-        => tag ["tags"] -> ImageTag = tag,
+        => get [] -> ImageTag = tag,
 );
 
 #[cfg(test)]
@@ -36,9 +38,10 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .image(IMAGE_ID)
-                .tag(IMAGE_TAG_ID)
+                .images()
+                .get(IMAGE_ID)
+                .tags()
+                .get(IMAGE_TAG_ID)
                 .execute()
                 .await
                 .expect("send request")
@@ -54,8 +57,8 @@ mod test {
             let c = client();
 
             let res = c
-                .get()
-                .image(IMAGE_ID)
+                .images()
+                .get(IMAGE_ID)
                 .tags()
                 .execute()
                 .await
