@@ -21,15 +21,15 @@
 //! // Generate `From<GetQueryBuilder>` implementations for our request builders.
 //! from!(
 //!     @GetQuery
-//!         => User,
-//!         => Users,
+//!         -> User,
+//!         -> Users,
 //! );
 //!
 //! // Implement methods on GetQueryBuilder for accessing our new request builder types.
 //! impl_macro!(
 //!     @GetQuery
-//!         |-> users ["users"] -> Users,
-//!         |=> user  ["users"] -> User = id,
+//!         -> users ["users"] -> Users,
+//!         => user  ["users"] -> User = id,
 //! );
 //!
 //! // Mark request builders as executable and specify the return type.
@@ -180,9 +180,9 @@ macro_rules! exec {
 ///     //    ||
 ///     //    \/
 ///     @GetQuery
-///         => User, // <= target builder
+///         -> User, // <= target builder
 ///         /// Documentation is passed through!
-///         => Users,
+///         -> Users,
 /// );
 ///
 /// // Expands to ...
@@ -236,9 +236,9 @@ macro_rules! from {
 ///         //  ||   route path     ||
 ///         //  ||       ||         ||  route variable name
 ///         //  \/       \/         \/          ||
-///         |-> users ["users"] -> Users,    // ||
+///         -> users ["users"] -> Users,    // ||
 ///         /// Docs are passed through too!    \/
-///         |=> user  ["users"] -> User       = id,
+///         => user  ["users"] -> User       = id,
 /// );
 ///
 /// // Expands to ...
