@@ -1,6 +1,6 @@
 imports!();
 
-new_builder!(Org, Orgs, Member, Members, OrgNamespaces, OrgRegistries);
+new_builder!(Org, Orgs, Member, Members, OrgNamespaces);
 
 exec!(
     Org -> crate::models::Organization,
@@ -8,8 +8,6 @@ exec!(
 
     Member -> crate::models::OrgMember,
     Members -> Vec<crate::models::OrgMember>,
-
-    OrgRegistries -> Vec<crate::models::Registry>,
 
     OrgNamespaces -> Vec<String>,
 );
@@ -20,7 +18,6 @@ from!(
         -> OrgNamespaces,
     @Org
         -> Members,
-        -> OrgRegistries,
     @Members
         -> Member,
 );
@@ -39,8 +36,6 @@ impl_builder!(
     @Org
         /// Queries all members in an organization.
         -> members ["members"] -> Members,
-        /// Queries all registries in an organization.
-        -> registries ["registries"] -> OrgRegistries,
     @Members
         /// Queries a specific member in an organization by their user id.
         => get [] -> Member = user_id,
@@ -151,32 +146,6 @@ mod test {
 
             // id should be a non-empty string
             assert_ne!(res.user.id, "");
-        }
-    }
-
-    mod registries {
-        use super::*;
-
-        #[tokio::test]
-        async fn test_org_members() {
-            let c = client();
-
-            let res = c
-                .orgs()
-                .get(ORG_ID)
-                .registries()
-                .execute()
-                .await
-                .expect("send request")
-                .response
-                .expect("api error returned");
-
-            // we should get at least 1
-            assert_ne!(res.len(), 0);
-
-            // they should all have non-empty ids
-            let ok = res.iter().fold(false, |ok, reg| ok || reg.id != "");
-            assert_eq!(ok, true);
         }
     }
 }
