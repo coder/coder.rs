@@ -22,15 +22,17 @@ from!(
 
 impl_macro!(
     @GetQuery
-        /// Queries an environment by its id.
+        /// Queries an environment by its id. Must be a site admin or a manager of the organization
+        /// the environment belongs to.
         => env ["environments"] -> Env = id,
 
     @Org
-        /// Queries all environments belonging to the organization.
+        /// Queries all environments belonging to the organization. Must be an organization
+        /// manager.
         -> envs ["environments"] -> Envs,
 
     @Member
-        /// Queries all environments belonging to the member.
+        /// Queries all environments belonging to the an organization member.
         -> envs ["environments"] -> Envs,
 );
 

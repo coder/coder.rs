@@ -29,7 +29,7 @@
 //! Coder provides the [`coder::Coder`](https://docs.rs/coder/latest/coder/client/struct.Coder.html)
 //! struct for creating requests.
 //!
-//! ```rust,ignore
+//! ```rust
 //! use std::env;
 //! use std::error::Error;
 //!

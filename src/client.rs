@@ -76,10 +76,11 @@ new_builder!(GetQuery);
 #[cfg(test)]
 pub(crate) mod test {
     pub(crate) mod ids {
-        pub const ORG_ID: &'static str = "default";
-        pub const USER_ID: &'static str = "5e876cf4-10abe9b2e54eb609c5ec1870";
-        pub const MEMBER_ID: &'static str = "5e876cf4-10abe9b2e54eb609c5ec1870";
         pub const ENV_ID: &'static str = "5ed15061-d7d3db1d91600a4fed28f6ed";
+        pub const MEMBER_ID: &'static str = "5e876cf4-10abe9b2e54eb609c5ec1870";
+        pub const ORG_ID: &'static str = "default";
+        pub const SERVICE_ID: &'static str = "5f15b3a2-57f7a823e4d379409978edbf";
+        pub const USER_ID: &'static str = "5e876cf4-10abe9b2e54eb609c5ec1870";
     }
 
     use super::*;

@@ -1,3 +1,4 @@
+use super::Duration;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -63,57 +64,30 @@ pub enum EnvironmentStatus {
     UNKNOWN,
 }
 
-/// Duration is a wrapper around chrono::Duration that Serializes into and Deserializes from
-/// millisecond precision integers.
-#[derive(Debug, Clone, PartialEq)]
-pub struct Duration(chrono::Duration);
-
-// Allow Duration to be used as a chrono::Duration.
-impl std::ops::Deref for Duration {
-    type Target = chrono::Duration;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Service {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub image_id: String,
+    pub image_tag: String,
+    pub command: String,
+    pub args: Vec<String>,
+    pub privileged: bool,
+    pub volume_mounts: Vec<ServiceVolumeMount>,
+    pub env_vars: Vec<ServiceEnvVar>,
 }
 
-use serde::Deserializer;
-impl<'de> Deserialize<'de> for Duration {
-    fn deserialize<D>(deserializer: D) -> Result<Duration, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let u = i64::deserialize(deserializer)?;
-        Ok(Duration(chrono::Duration::milliseconds(u)))
-    }
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ServiceVolumeMount {
+    pub name: String,
+    pub service_id: String,
+    pub path: String,
+    pub size_gb: i32,
 }
 
-use serde::Serializer;
-impl Serialize for Duration {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        serializer.serialize_i64(self.0.num_milliseconds())
-    }
-}
-
-#[cfg(test)]
-mod test {
-    use super::Duration;
-    use serde_json;
-
-    #[test]
-    fn test_serialize_duration() {
-        let ms = 86400000i64;
-        let d = Duration(chrono::Duration::milliseconds(ms));
-        assert_eq!(serde_json::to_string(&d).unwrap(), ms.to_string());
-    }
-
-    #[test]
-    fn test_deserialize_duration() {
-        let ms = 86400000i64;
-        let d: Duration = serde_json::from_str(&ms.to_string()).unwrap();
-        assert_eq!(d.num_milliseconds(), ms);
-    }
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ServiceEnvVar {
+    pub key: String,
+    pub value: String,
 }
