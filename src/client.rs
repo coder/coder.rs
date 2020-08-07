@@ -6,10 +6,10 @@ use hyper_tls;
 #[cfg(feature = "rust-native-tls")]
 type HttpsConnector = hyper_tls::HttpsConnector<hyper::client::HttpConnector>;
 
-use std::cell::RefCell;
 use std::error::Error;
 use std::sync::Arc;
 
+use http::uri::PathAndQuery;
 use hyper::StatusCode;
 use hyper::{self, Body};
 use hyper::{Client, Request};
@@ -22,18 +22,25 @@ use serde::Deserialize;
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 pub struct Coder {
-    url: &'static str,
+    uri: &'static str,
     token: &'static str,
     pub(crate) client: Arc<Client<HttpsConnector>>,
 }
 
+const API_PREFIX: &'static str = "/api";
+
 impl Coder {
-    pub fn new(url: String, token: String) -> Self {
-        Self {
-            url: Box::leak(url.into_boxed_str()),
+    pub fn new(uri: String, token: String) -> Result<Self, Box<dyn Error>> {
+        let uri = uri.parse::<hyper::Uri>()?;
+        let mut parts = uri.into_parts();
+        parts.path_and_query = Some(PathAndQuery::from_static(API_PREFIX));
+        let uri = hyper::Uri::from_parts(parts).unwrap();
+
+        Ok(Self {
+            uri: Box::leak(uri.to_string().into_boxed_str()),
             token: Box::leak(token.into_boxed_str()),
             client: Arc::new(Client::builder().build(HttpsConnector::new())),
-        }
+        })
     }
 }
 
@@ -54,17 +61,15 @@ pub trait Executor {
     async fn execute(self) -> Result<ApiResponse<Self::T>, Box<dyn Error>>;
 }
 
-const API_PREFIX: &'static str = "/api";
-
 impl Coder {
-    pub fn new_request(&self) -> Result<RefCell<Request<Body>>, Box<dyn Error>> {
+    /// Returns a populated request for creating custom queries.
+    pub fn new_request(&self) -> Result<Request<Body>, Box<dyn Error>> {
         Ok(Request::builder()
             .method(hyper::Method::GET)
-            .uri(format!("{}{}", self.url, API_PREFIX))
+            .uri(self.uri)
             .header("User-Agent", format!("coder.rs {}", VERSION))
             .header("Session-Token", self.token)
-            .body(Body::empty())
-            .map(|r| RefCell::new(r))?)
+            .body(Body::empty())?)
     }
 }
 
@@ -87,6 +92,6 @@ pub(crate) mod test {
     pub fn client() -> Coder {
         let url = env::var("MANAGER_URL").expect("no MANAGER_URL env provided");
         let api_key = env::var("API_KEY").expect("no API_KEY env provided");
-        Coder::new(url, api_key)
+        Coder::new(url, api_key).unwrap()
     }
 }

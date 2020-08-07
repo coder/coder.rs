@@ -303,7 +303,7 @@ macro_rules! impl_client {
                 $(
                     pub fn $fn(&self) -> [<$t Builder>] {
                         let mut b = [<$t Builder>] {
-                            request: self.new_request(),
+                            request: self.new_request().map(|r| RefCell::new(r)),
                             client: Arc::clone(&self.client),
                         };
                         join_path!(b, &[$p]);
