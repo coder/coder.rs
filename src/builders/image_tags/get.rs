@@ -1,8 +1,13 @@
 imports!();
 
-new_builder!(ImageTag, ImageTags);
+new_builder!(
+    /// /api/images/:id/tags/:tag
+    ImageTag,
+    /// /api/images/:id/tags
+    ImageTags,
+);
 
-use crate::builders::images::get::ImageBuilder;
+use crate::builders::images::get::GlobalImageBuilder;
 
 exec!(
     ImageTag  -> crate::models::ImageTag,
@@ -10,14 +15,14 @@ exec!(
 );
 
 from!(
-    @Image
+    @GlobalImage
         -> ImageTags,
     @ImageTags
         -> ImageTag,
 );
 
 impl_builder!(
-    @Image
+    @GlobalImage
         /// Queries all image tags belonging to an image.
         -> tags ["tags"] -> ImageTags,
     @ImageTags

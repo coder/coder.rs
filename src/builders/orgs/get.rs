@@ -1,6 +1,17 @@
 imports!();
 
-new_builder!(Org, Orgs, Member, Members, OrgNamespaces);
+new_builder!(
+    /// /api/orgs/:id
+    Org,
+    /// /api/orgs
+    Orgs,
+    /// /api/orgs/:id/members/:id
+    Member,
+    /// /api/orgs/:id/members
+    Members,
+    /// /api/orgs/namespaces
+    OrgNamespaces
+);
 
 exec!(
     Org -> crate::models::Organization,

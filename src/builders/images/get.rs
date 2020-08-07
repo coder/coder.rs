@@ -1,11 +1,18 @@
 imports!();
 
-new_builder!(Image, OrgImages, GlobalImages);
+new_builder!(
+    /// /api/images/:id
+    GlobalImage,
+    /// /api/images
+    GlobalImages,
+    /// /api/orgs/:id/images
+    OrgImages,
+);
 
 use crate::builders::orgs::get::OrgBuilder;
 
 exec!(
-    Image  -> crate::models::Image,
+    GlobalImage  -> crate::models::Image,
     OrgImages -> Vec<crate::models::Image>,
 );
 
@@ -13,7 +20,7 @@ from!(
     @Org
         -> OrgImages,
     @GlobalImages
-        -> Image,
+        -> GlobalImage,
 );
 
 impl_client!(
@@ -27,7 +34,7 @@ impl_builder!(
         -> images ["images"] -> OrgImages,
     @GlobalImages
         /// Queries an image in by its id.
-        => get [] -> Image = id,
+        => get [] -> GlobalImage = id,
 );
 
 #[cfg(test)]

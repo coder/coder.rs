@@ -1,28 +1,33 @@
 imports!();
 
-new_builder!(Service, Services);
+new_builder!(
+    /// /api/orgs/:id/services/:id
+    OrgService,
+    /// /api/orgs/:id/services
+    OrgServices
+);
 
 use crate::builders::orgs::get::OrgBuilder;
 
 exec!(
-    Service -> crate::models::Service,
-    Services -> Vec<crate::models::Service>,
+    OrgService -> crate::models::Service,
+    OrgServices -> Vec<crate::models::Service>,
 );
 
 from!(
     @Org
-        -> Services,
-    @Services
-        -> Service,
+        -> OrgServices,
+    @OrgServices
+        -> OrgService,
 );
 
 impl_builder!(
     @Org
         /// Queries all services in an organization.
-        -> services ["services"] -> Services,
-    @Services
+        -> services ["services"] -> OrgServices,
+    @OrgServices
         /// Queries a specific service in an organization by its id.
-        => get [] -> Service = id,
+        => get [] -> OrgService = id,
 );
 
 #[cfg(test)]

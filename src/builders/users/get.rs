@@ -1,6 +1,11 @@
 imports!();
 
-new_builder!(User, Users);
+new_builder!(
+    /// /api/users/:id
+    User,
+    /// /api/users
+    Users
+);
 
 exec!(
     User  -> crate::models::User,

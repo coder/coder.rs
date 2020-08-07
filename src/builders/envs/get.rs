@@ -1,12 +1,21 @@
 imports!();
 
-new_builder!(Env, OrgEnvs, GlobalEnvs, MemberEnvs);
+new_builder!(
+    /// /api/environments/:id
+    GlobalEnv,
+    /// /api/environments
+    GlobalEnvs,
+    /// /api/orgs/:id/environments
+    OrgEnvs,
+    /// /api/orgs/:id/members/:id/environments
+    MemberEnvs
+);
 
 use crate::builders::orgs::get::MemberBuilder;
 use crate::builders::orgs::get::OrgBuilder;
 
 exec!(
-    Env -> crate::models::Environment,
+    GlobalEnv -> crate::models::Environment,
     OrgEnvs -> Vec<crate::models::Environment>,
     MemberEnvs -> Vec<crate::models::Environment>,
 );
@@ -17,7 +26,7 @@ from!(
     @Member
         -> MemberEnvs,
     @GlobalEnvs
-        -> Env,
+        -> GlobalEnv,
 );
 
 impl_client!(
@@ -38,7 +47,7 @@ impl_builder!(
     @GlobalEnvs
         /// Queries an environment by its id. Must be a site admin or a manager of the organization
         /// the environment belongs to.
-        => get [] -> Env = id,
+        => get [] -> GlobalEnv = id,
 );
 
 #[cfg(test)]
