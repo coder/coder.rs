@@ -21,7 +21,7 @@ from!(
 );
 
 impl_client!(
-    /// Begins an environments query.
+    /// Begins an environment query.
     -> envs ["environments"] -> GlobalEnvs,
 );
 

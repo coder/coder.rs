@@ -21,7 +21,7 @@ impl_builder!(
         /// Queries all image tags belonging to an image.
         -> tags ["tags"] -> ImageTags,
     @ImageTags
-        /// Queries an image tag by its tag.
+        /// Queries an image tag for an image by its tag.
         => get [] -> ImageTag = tag,
 );
 

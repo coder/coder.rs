@@ -26,7 +26,7 @@ impl_builder!(
         /// Queries all images in an organization.
         -> images ["images"] -> OrgImages,
     @GlobalImages
-        /// Queries an image by its id.
+        /// Queries an image in by its id.
         => get [] -> Image = id,
 );
 

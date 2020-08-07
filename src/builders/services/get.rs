@@ -21,7 +21,7 @@ impl_builder!(
         /// Queries all services in an organization.
         -> services ["services"] -> Services,
     @Services
-        /// Queries a service in an organization by its id.
+        /// Queries a specific service in an organization by its id.
         => get [] -> Service = id,
 );
 

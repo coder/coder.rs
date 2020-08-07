@@ -23,20 +23,21 @@ from!(
 );
 
 impl_client!(
-    /// Begins a organization query.
+    /// Begins an organization query.
     -> orgs ["orgs"] -> Orgs,
 );
 
 impl_builder!(
     @Orgs
-        /// Queries an org by its id.
+        /// Queries an organization by its id.
         => get [] -> Org = id,
-        /// Queries the available namespaces in an organization.
+        /// Queries the available namespaces for organizations.
         -> namespaces ["namespaces"] -> Namespaces,
     @Org
         /// Queries all members in an organization.
         -> members ["members"] -> Members,
     @Members
+        /// Queries a specific member in an organization by their user id.
         => get [] -> Member = user_id,
 );
 
