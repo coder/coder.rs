@@ -1,5 +1,5 @@
-use super::Duration;
-use super::ServiceStat;
+use super::*;
+
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 

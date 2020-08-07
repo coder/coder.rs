@@ -1,4 +1,4 @@
-use super::ContainerStatus;
+use super::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

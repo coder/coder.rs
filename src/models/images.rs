@@ -1,7 +1,7 @@
+use super::*;
+
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-
-use super::Environment;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Image {
