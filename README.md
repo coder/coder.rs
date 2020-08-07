@@ -1,22 +1,19 @@
-# coder
+<!-- cargo-sync-readme start -->
 
 [![Crates.io][crates-badge]][crates-url]
 [![Docs.rs][docs-badge]][docs-url]
 [![MIT licensed][mit-badge]][mit-url]
 
-[crates-badge]: https://img.shields.io/crates/v/coder.svg
-[crates-url]: https://crates.io/crates/coder
-[docs-badge]: https://docs.rs/coder/badge.svg
-[docs-url]: https://docs.rs/coder
-[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-url]: https://github.com/coadler/coder.rs/blob/master/LICENSE
+![coder.rs logo][logo-url]
+
+# coder.rs
 
 An asynchronous, pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
 
 This is currently experimental. Not all routes have been implemented and the API is expected to
 change.
 
-### Installation
+## Installation
 
 Coder.rs has been tested to work on Rust 1.40+
 
@@ -26,7 +23,7 @@ Add this to your `Cargo.toml`'s `[dependencies]` section:
 coder = { version = "0.2", features = ["rustls"] }
 ```
 
-### Usage
+## Usage
 
 Coder provides the [`coder::Coder`](https://docs.rs/coder/latest/coder/client/struct.Coder.html)
 struct for creating requests.
@@ -84,9 +81,17 @@ async fn main() -> Result<(), Box<dyn Error>> {
 // }
 ```
 
-### Features
+## Features
 
 * `rustls` - Uses the [`rustls`](https://docs.rs/rustls/) pure Rust TLS implementation. (default)
 * `rust-native-tls` - Uses [`native-tls`](https://docs.rs/native-tls/) for TLS which links against the OS default.
 
-License: MIT
+[crates-badge]: https://img.shields.io/crates/v/coder.svg
+[crates-url]: https://crates.io/crates/coder
+[docs-badge]: https://docs.rs/coder/badge.svg
+[docs-url]: https://docs.rs/coder
+[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[mit-url]: https://github.com/coadler/coder.rs/blob/master/LICENSE
+[logo-url]: https://raw.githubusercontent.com/cdr/coder.rs/master/logo.png
+
+<!-- cargo-sync-readme end -->

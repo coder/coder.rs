@@ -57,15 +57,19 @@ pub trait Executor {
 const API_PREFIX: &'static str = "/api";
 
 impl Coder {
+    pub fn new_request(&self) -> Result<RefCell<Request<Body>>, Box<dyn Error>> {
+        Ok(Request::builder()
+            .method(hyper::Method::GET)
+            .uri(format!("{}{}", self.url, API_PREFIX))
+            .header("User-Agent", format!("coder.rs {}", VERSION))
+            .header("Session-Token", self.token)
+            .body(Body::empty())
+            .map(|r| RefCell::new(r))?)
+    }
     /// Starts a query to get a resource.
     pub fn get(&self) -> GetQueryBuilder {
         GetQueryBuilder {
-            request: Request::get(format!("{}{}", self.url, API_PREFIX))
-                .header("User-Agent", format!("coder.rs {}", VERSION))
-                .header("Session-Token", self.token)
-                .body(Body::empty())
-                .map(|r| RefCell::new(r))
-                .map_err(|e| Box::new(e) as Box<dyn Error>),
+            request: self.new_request(),
             client: Arc::clone(&self.client),
         }
     }

@@ -2,12 +2,9 @@
 //! [![Docs.rs][docs-badge]][docs-url]
 //! [![MIT licensed][mit-badge]][mit-url]
 //!
-//! [crates-badge]: https://img.shields.io/crates/v/coder.svg
-//! [crates-url]: https://crates.io/crates/coder
-//! [docs-badge]: https://docs.rs/coder/badge.svg
-//! [docs-url]: https://docs.rs/coder
-//! [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-//! [mit-url]: https://github.com/coadler/coder.rs/blob/master/LICENSE
+//! ![coder.rs logo][logo-url]
+//!
+//! # coder.rs
 //!
 //! An asynchronous, pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
 //!
@@ -86,6 +83,14 @@
 //!
 //! * `rustls` - Uses the [`rustls`](https://docs.rs/rustls/) pure Rust TLS implementation. (default)
 //! * `rust-native-tls` - Uses [`native-tls`](https://docs.rs/native-tls/) for TLS which links against the OS default.
+//!
+//! [crates-badge]: https://img.shields.io/crates/v/coder.svg
+//! [crates-url]: https://crates.io/crates/coder
+//! [docs-badge]: https://docs.rs/coder/badge.svg
+//! [docs-url]: https://docs.rs/coder
+//! [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+//! [mit-url]: https://github.com/coadler/coder.rs/blob/master/LICENSE
+//! [logo-url]: https://raw.githubusercontent.com/cdr/coder.rs/master/logo.png
 
 // #![feature(trace_macros)]
 // trace_macros!(true);
