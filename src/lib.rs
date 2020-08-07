@@ -6,7 +6,7 @@
 //!
 //! # coder.rs
 //!
-//! An asynchronous, pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
+//! An asynchronous, pure Rust wrapper around the [Coder](https://coder.com) Enterprise API.
 //!
 //! This is currently experimental. Not all routes have been implemented and the API is expected to
 //! change.
