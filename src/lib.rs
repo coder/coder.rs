@@ -18,7 +18,7 @@
 //! Add this to your `Cargo.toml`'s `[dependencies]` section:
 //!
 //! ```toml
-//! coder = { version = "0.2", features = ["rustls"] }
+//! coder = { version = "0.3", features = ["rustls"] }
 //! ```
 //!
 //! ## Usage
