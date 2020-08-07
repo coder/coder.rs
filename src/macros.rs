@@ -26,7 +26,7 @@
 //! );
 //!
 //! // Implement methods on GetQueryBuilder for accessing our new request builder types.
-//! impl_macro!(
+//! impl_builder!(
 //!     @GetQuery
 //!         -> users ["users"] -> Users,
 //!         => user  ["users"] -> User = id,
@@ -169,7 +169,7 @@ macro_rules! exec {
 }
 
 /// Generates `From<T>` implementations for converting typed request builders into other typed
-/// request builders. The implementations here are used in the `impl_macro!` macro. Documentation
+/// request builders. The implementations here are used in the `impl_builder!` macro. Documentation
 /// is passed through for target builders.
 ///
 /// # Example
@@ -222,7 +222,7 @@ macro_rules! from {
 /// # Example
 ///
 /// ```
-/// impl_macro!(
+/// impl_builder!(
 ///     // source builder
 ///     //    ||
 ///     //    \/
@@ -249,7 +249,7 @@ macro_rules! from {
 ///     pub fn user<T: ToString>(mut self, id: T) -> UserBuilder { ... }
 /// }
 /// ```
-macro_rules! impl_macro {
+macro_rules! impl_builder {
     // This first line should contain @ and the struct we are implementing from, like @GetQuery.
     // The struct should have been generated from the new_builder! macro.
     ($(@$i: ident

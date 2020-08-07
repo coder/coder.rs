@@ -20,7 +20,7 @@ from!(
         -> Envs,
 );
 
-impl_macro!(
+impl_builder!(
     @GetQuery
         /// Queries an environment by its id. Must be a site admin or a manager of the organization
         /// the environment belongs to.

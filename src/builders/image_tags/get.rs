@@ -15,7 +15,7 @@ from!(
         -> ImageTags,
 );
 
-impl_macro!(
+impl_builder!(
     @Image
         /// Queries all image tags belonging to an image.
         -> tags ["tags"] -> ImageTags,

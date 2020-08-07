@@ -15,7 +15,7 @@ from!(
         -> Services,
 );
 
-impl_macro!(
+impl_builder!(
     @Org
         /// Queries all services in an organization.
         -> services ["services"] -> Services,

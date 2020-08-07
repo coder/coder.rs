@@ -17,7 +17,7 @@ from!(
         -> Images,
 );
 
-impl_macro!(
+impl_builder!(
     @GetQuery
         /// Queries an image by its id.
         => image ["images"] -> Image = id,

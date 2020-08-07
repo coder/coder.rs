@@ -16,7 +16,7 @@ from!(
         -> Users,
 );
 
-impl_macro!(
+impl_builder!(
     @GetQuery
         /// Queries the current user.
         -> me    ["users/me"] -> User,

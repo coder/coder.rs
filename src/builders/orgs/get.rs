@@ -27,7 +27,7 @@ from!(
         -> Namespaces,
 );
 
-impl_macro!(
+impl_builder!(
     @GetQuery
         /// Queries all orgs the user belongs to, or all if the user is a site admin.
         -> orgs ["orgs"] -> Orgs,
