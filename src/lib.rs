@@ -2,9 +2,7 @@
 //! [![Docs.rs][docs-badge]][docs-url]
 //! [![MIT licensed][mit-badge]][mit-url]
 //!
-//! <img src="https://raw.githubusercontent.com/cdr/coder.rs/master/logo.png" width="300" height="300">
-//!
-//! ![coder.rs logo][logo-url]
+//! <img src="https://raw.githubusercontent.com/cdr/coder.rs/master/logo.png" width="350" height="350">
 //!
 //! # coder.rs
 //!

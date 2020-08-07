@@ -6,8 +6,6 @@
 
 <img src="https://raw.githubusercontent.com/cdr/coder.rs/master/logo.png" width="300" height="300">
 
-![coder.rs logo][logo-url]
-
 # coder.rs
 
 An asynchronous, pure Rust wrapper around the [Coder](https://coder.com) On-Prem API.
