@@ -19,8 +19,8 @@ impl_macro!(
     @Image
         /// Queries all image tags belonging to an image.
         -> tags ["tags"] -> ImageTags,
-        /// Queries an image tag by its id.
-        => tag ["tags"] -> ImageTag = id,
+        /// Queries an image tag by its tag.
+        => tag ["tags"] -> ImageTag = tag,
 );
 
 #[cfg(test)]
