@@ -78,6 +78,7 @@ pub(crate) mod test {
     pub(crate) mod ids {
         pub const ENV_ID: &'static str = "5ed15061-d7d3db1d91600a4fed28f6ed";
         pub const IMAGE_ID: &'static str = "5ea8a569-596e6afd9301c23f8dabd87c";
+        pub const IMAGE_TAG_ID: &'static str = "latest";
         pub const MEMBER_ID: &'static str = "5e876cf4-10abe9b2e54eb609c5ec1870";
         pub const ORG_ID: &'static str = "default";
         pub const SERVICE_ID: &'static str = "5f15b3a2-57f7a823e4d379409978edbf";

@@ -75,7 +75,7 @@ mod test {
                 .response
                 .expect("api error returned");
 
-            // we should get at least 1 member
+            // we should get at least 1
             assert_ne!(res.len(), 0);
 
             // they should all have non-empty ids
