@@ -110,3 +110,5 @@ pub mod models;
 pub mod builders;
 
 mod util;
+
+pub use client::{Coder, Executor};
