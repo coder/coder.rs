@@ -36,8 +36,8 @@ use coder::client::{Coder, Executor};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    let url = env::var("MANAGER_URL").unwrap();
-    let api_key = env::var("API_KEY").unwrap();
+    let url = env::var("MANAGER_URL")?;
+    let api_key = env::var("API_KEY")?;
     let c = Coder::new(url, api_key)?;
 
     let res = c.users().me().execute().await?;

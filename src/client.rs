@@ -45,7 +45,7 @@ impl Coder {
 }
 
 #[derive(Debug)]
-pub struct ApiResponse<T> {
+pub struct ApiResponse<T: DeserializeOwned> {
     pub headers: Headers,
     pub status_code: StatusCode,
     pub response: Result<T, ApiError>,
@@ -89,7 +89,7 @@ pub(crate) mod test {
     use super::*;
     use std::env;
 
-    pub fn client() -> Coder {
+    pub(crate) fn client() -> Coder {
         let url = env::var("MANAGER_URL").expect("no MANAGER_URL env provided");
         let api_key = env::var("API_KEY").expect("no API_KEY env provided");
         Coder::new(url, api_key).unwrap()
