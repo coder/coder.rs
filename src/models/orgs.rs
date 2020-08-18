@@ -21,8 +21,20 @@ pub struct OrgMember {
     #[serde(flatten)]
     pub user: super::User,
 
-    pub organization_roles: Vec<String>,
+    pub organization_roles: Vec<OrgRole>,
     pub has_active_environments: bool,
     pub joined_at: DateTime<Utc>,
     pub roles_updated_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum OrgRole {
+    #[serde(rename = "organization-admin")]
+    Admin,
+    #[serde(rename = "organization-manager")]
+    Manager,
+    #[serde(rename = "registry-manager")]
+    RegistryManager,
+    #[serde(rename = "organization-member")]
+    Member,
 }
