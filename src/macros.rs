@@ -51,9 +51,9 @@ macro_rules! imports {
         use async_trait::async_trait;
         use hyper::client::Client;
         use paste::paste;
-        use std::cell::RefCell;
         use std::error::Error;
         use std::sync::Arc;
+        use std::sync::RwLock;
 
         use $crate::client::ApiResponse;
         use $crate::client::Executor;
@@ -88,7 +88,7 @@ macro_rules! new_builder {
         $(paste! {
             $(#[$doc])*
             pub struct [<$i Builder>] {
-                pub(crate) request: Result<RefCell<hyper::Request<hyper::Body>>, Box<dyn Error>>,
+                pub(crate) request: Result<RwLock<hyper::Request<hyper::Body>>, Box<dyn Error>>,
                 pub(crate) client: Arc<Client<HttpsConnector>>,
             }
             unsafe impl Send for [<$i Builder>] {}
@@ -145,7 +145,7 @@ macro_rules! exec {
 
                 async fn execute(self) -> Result<ApiResponse<Self::T>, Box<dyn Error>> {
                     let client = self.client;
-                    let req = self.request?.into_inner();
+                    let req = self.request?.into_inner().unwrap();
                     // dbg!(&req);
                     let res = client.request(req).await?;
                     let (parts, body) = res.into_parts();
@@ -303,7 +303,7 @@ macro_rules! impl_client {
                 $(
                     pub fn $fn(&self) -> [<$t Builder>] {
                         let mut b = [<$t Builder>] {
-                            request: self.new_request().map(|r| RefCell::new(r)),
+                            request: self.new_request().map(|r| RwLock::new(r)),
                             client: Arc::clone(&self.client),
                         };
                         join_path!(b, &[$p]);
@@ -319,12 +319,12 @@ macro_rules! join_path {
     ($e: ident, $p: expr) => {
         if $e.request.is_ok() {
             // We've checked that this works
-            let mut req = $e.request.unwrap();
-            let url = url_join(req.borrow().uri(), $p);
+            let inner = $e.request.unwrap();
+            let url = url_join(inner.read().unwrap().uri(), $p);
             match url {
                 Ok(u) => {
-                    *req.get_mut().uri_mut() = u;
-                    $e.request = Ok(req);
+                    *inner.write().unwrap().uri_mut() = u;
+                    $e.request = Ok(inner);
                 }
                 Err(e) => {
                     $e.request = Err(e.into());
