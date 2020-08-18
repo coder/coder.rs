@@ -35,6 +35,11 @@ impl_builder!(
     @GlobalImages
         /// Queries an image in by its id.
         => get [] -> GlobalImage = id,
+        ?> with_envs ["envs"] -> v: bool,
+    @GlobalImage
+        ?> with_envs ["envs"] -> v: bool,
+    @OrgImages
+        ?> with_envs ["envs"] -> v: bool,
 );
 
 #[cfg(test)]
@@ -56,7 +61,40 @@ mod test {
             .expect("api error returned");
 
         // id should at least not be empty
-        assert_ne!(res.id, "");
+        assert!(!res.id.is_empty(), "id should be a non-empty string");
+    }
+
+    #[tokio::test]
+    async fn test_image_with_environments() {
+        let c = client();
+
+        let res = c
+            .images()
+            .get(IMAGE_ID)
+            .with_envs(true)
+            .execute()
+            .await
+            .expect("send request")
+            .response
+            .expect("api error returned");
+
+        // id should at least not be empty
+        assert!(!res.id.is_empty(), "id should be a non-empty string");
+        assert!(res.environments.is_some(), "envs should be returned");
+
+        let res = c
+            .images()
+            .get(IMAGE_ID)
+            .with_envs(false)
+            .execute()
+            .await
+            .expect("send request")
+            .response
+            .expect("api error returned");
+
+        // id should at least not be empty
+        assert!(!res.id.is_empty(), "id should be a non-empty string");
+        assert!(res.environments.is_none(), "envs should not be returned");
     }
 
     mod org {
@@ -80,7 +118,7 @@ mod test {
             assert_ne!(res.len(), 0);
 
             // they should all have non-empty ids
-            let ok = res.iter().fold(false, |ok, img| ok || img.id != "");
+            let ok = res.iter().fold(false, |ok, img| ok || img.id != "".into());
             assert_eq!(ok, true);
         }
     }

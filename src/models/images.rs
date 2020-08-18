@@ -4,8 +4,12 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ImageId(pub String);
+id_string!(ImageId);
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Image {
-    pub id: String,
+    pub id: ImageId,
     pub organization_id: String,
     pub repository: String,
     pub description: String,
@@ -14,11 +18,15 @@ pub struct Image {
     pub default_memory_gb: i64,
     pub default_disk_gb: i64,
     pub deprecated: bool,
-    pub environments: Vec<Environment>,
     pub registry: Registry,
     pub default_tag: ImageTag,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+
+    /// All environments using this image. Must opt in to receive.
+    pub environments: Option<Vec<Environment>>,
+    /// IDs of all users using this image. Must opt in to receive.
+    pub user_ids: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

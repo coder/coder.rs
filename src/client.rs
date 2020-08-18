@@ -9,10 +9,10 @@ type HttpsConnector = hyper_tls::HttpsConnector<hyper::client::HttpConnector>;
 use std::error::Error;
 use std::sync::Arc;
 
-use http::uri::PathAndQuery;
 use hyper::StatusCode;
 use hyper::{self, Body};
 use hyper::{Client, Request};
+use url::Url;
 
 use crate::headers::Headers;
 use async_trait::async_trait;
@@ -22,23 +22,18 @@ use serde::Deserialize;
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 pub struct Coder {
-    uri: &'static str,
-    token: &'static str,
+    pub(crate) url: Url,
+    pub(crate) token: &'static str,
     pub(crate) client: Arc<Client<HttpsConnector>>,
 }
 
 const API_PREFIX: &'static str = "/api";
 
 impl Coder {
-    pub fn new(uri: String, token: String) -> Result<Self, Box<dyn Error>> {
-        let uri = uri.parse::<hyper::Uri>()?;
-        let mut parts = uri.into_parts();
-        parts.path_and_query = Some(PathAndQuery::from_static(API_PREFIX));
-        let uri = hyper::Uri::from_parts(parts).unwrap();
-
+    pub fn new<T: ToString>(uri: String, token: T) -> Result<Self, Box<dyn Error>> {
         Ok(Self {
-            uri: Box::leak(uri.to_string().into_boxed_str()),
-            token: Box::leak(token.into_boxed_str()),
+            url: uri.parse::<Url>()?.join(API_PREFIX)?,
+            token: Box::leak(token.to_string().into_boxed_str()),
             client: Arc::new(Client::builder().build(HttpsConnector::new())),
         })
     }
@@ -49,6 +44,18 @@ pub struct ApiResponse<T: DeserializeOwned> {
     pub headers: Headers,
     pub status_code: StatusCode,
     pub response: Result<T, ApiError>,
+}
+
+pub(crate) struct Builder {
+    pub url: Url,
+    pub req: Request<Body>,
+}
+
+impl Builder {
+    pub(crate) fn build(mut self) -> Request<Body> {
+        *self.req.uri_mut() = self.url.to_string().parse().unwrap();
+        self.req
+    }
 }
 
 #[derive(Deserialize, Debug)]
@@ -66,7 +73,7 @@ impl Coder {
     pub fn new_request(&self) -> Result<Request<Body>, Box<dyn Error>> {
         Ok(Request::builder()
             .method(hyper::Method::GET)
-            .uri(self.uri)
+            .uri(self.url.to_string())
             .header("User-Agent", format!("coder.rs {}", VERSION))
             .header("Session-Token", self.token)
             .body(Body::empty())?)
