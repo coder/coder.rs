@@ -69,7 +69,6 @@ mod test {
             .response
             .expect("api error returned");
 
-        // id should at least not be empty
         assert!(!res.id.is_empty(), "id should be a non-empty string");
     }
 
@@ -87,7 +86,6 @@ mod test {
             .response
             .expect("api error returned");
 
-        // id should at least not be empty
         assert!(!res.id.is_empty(), "id should be a non-empty string");
         assert!(res.environments.is_some(), "envs should be returned");
 
@@ -101,9 +99,39 @@ mod test {
             .response
             .expect("api error returned");
 
-        // id should at least not be empty
         assert!(!res.id.is_empty(), "id should be a non-empty string");
         assert!(res.environments.is_none(), "envs should not be returned");
+    }
+
+    #[tokio::test]
+    async fn test_image_with_user_ids() {
+        let c = client();
+
+        let res = c
+            .images()
+            .get(IMAGE_ID)
+            .with_user_ids(true)
+            .execute()
+            .await
+            .expect("send request")
+            .response
+            .expect("api error returned");
+
+        assert!(!res.id.is_empty(), "id should be a non-empty string");
+        assert!(res.user_ids.is_some(), "user_ids should be returned");
+
+        let res = c
+            .images()
+            .get(IMAGE_ID)
+            .with_user_ids(false)
+            .execute()
+            .await
+            .expect("send request")
+            .response
+            .expect("api error returned");
+
+        assert!(!res.id.is_empty(), "id should be a non-empty string");
+        assert!(res.user_ids.is_none(), "user_ids should not be returned");
     }
 
     mod org {
@@ -123,12 +151,8 @@ mod test {
                 .response
                 .expect("api error returned");
 
-            // we should get at least 1
-            assert_ne!(res.len(), 0);
-
-            // they should all have non-empty ids
-            let ok = res.iter().fold(false, |ok, img| ok || img.id != "".into());
-            assert_eq!(ok, true);
+            assert!(res.len() > 0);
+            assert!(res.iter().fold(false, |ok, img| ok || img.id != "".into()));
         }
     }
 }
