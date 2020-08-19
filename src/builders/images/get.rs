@@ -36,10 +36,13 @@ impl_builder!(
         /// Queries an image in by its id.
         => get [] -> GlobalImage = id,
         ?> with_envs ["envs"] -> v: bool,
+        ?> with_user_ids ["user_ids"] -> v: bool,
     @GlobalImage
         ?> with_envs ["envs"] -> v: bool,
+        ?> with_user_ids ["user_ids"] -> v: bool,
     @OrgImages
         ?> with_envs ["envs"] -> v: bool,
+        ?> with_user_ids ["user_ids"] -> v: bool,
 );
 
 #[cfg(test)]
