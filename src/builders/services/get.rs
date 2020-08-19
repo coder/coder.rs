@@ -1,9 +1,9 @@
 imports!();
 
 new_builder!(
-    /// /api/orgs/:id/services/:id
+    /// `/api/orgs/:id/services/:id`
     OrgService,
-    /// /api/orgs/:id/services
+    /// `/api/orgs/:id/services`
     OrgServices
 );
 

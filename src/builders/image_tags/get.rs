@@ -1,9 +1,9 @@
 imports!();
 
 new_builder!(
-    /// /api/images/:id/tags/:tag
+    /// `/api/images/:id/tags/:tag`
     ImageTag,
-    /// /api/images/:id/tags
+    /// `/api/images/:id/tags`
     ImageTags,
 );
 

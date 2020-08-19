@@ -1,11 +1,11 @@
 imports!();
 
 new_builder!(
-    /// /api/registries/:id
+    /// `/api/registries/:id`
     GlobalRegistry,
-    /// /api/registries
+    /// `/api/registries`
     GlobalRegistries,
-    /// /api/orgs/:id/registries
+    /// `/api/orgs/:id/registries`
     OrgRegistries
 );
 

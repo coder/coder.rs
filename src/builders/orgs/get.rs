@@ -1,15 +1,15 @@
 imports!();
 
 new_builder!(
-    /// /api/orgs/:id
+    /// `/api/orgs/:id`
     Org,
-    /// /api/orgs
+    /// `/api/orgs`
     Orgs,
-    /// /api/orgs/:id/members/:id
+    /// `/api/orgs/:id/members/:id`
     Member,
-    /// /api/orgs/:id/members
+    /// `/api/orgs/:id/members`
     Members,
-    /// /api/orgs/namespaces
+    /// `/api/orgs/namespaces`
     OrgNamespaces
 );
 

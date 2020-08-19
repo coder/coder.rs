@@ -1,13 +1,13 @@
 imports!();
 
 new_builder!(
-    /// /api/environments/:id
+    /// `/api/environments/:id`
     GlobalEnv,
-    /// /api/environments
+    /// `/api/environments`
     GlobalEnvs,
-    /// /api/orgs/:id/environments
+    /// `/api/orgs/:id/environments`
     OrgEnvs,
-    /// /api/orgs/:id/members/:id/environments
+    /// `/api/orgs/:id/members/:id/environments`
     MemberEnvs
 );
 

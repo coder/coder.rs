@@ -1,9 +1,9 @@
 imports!();
 
 new_builder!(
-    /// /api/users/:id
+    /// `/api/users/:id`
     User,
-    /// /api/users
+    /// `/api/users`
     Users
 );
 
