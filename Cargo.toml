@@ -2,7 +2,7 @@
 name = "coder"
 authors = ["Colin Adler <colin@coder.com>"]
 description = "Asynchronous, pure Rust bindings to the Coder On-Prem API"
-version = "0.3.5"
+version = "0.3.6"
 license = "MIT"
 homepage = "https://coder.com"
 repository = "https://github.com/coadler/coder.rs"
