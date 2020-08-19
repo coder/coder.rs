@@ -1,11 +1,11 @@
 imports!();
 
 new_builder!(
-    /// /api/images/:id
+    /// `/api/images/:id`
     GlobalImage,
-    /// /api/images
+    /// `/api/images`
     GlobalImages,
-    /// /api/orgs/:id/images
+    /// `/api/orgs/:id/images`
     OrgImages,
 );
 
@@ -35,13 +35,19 @@ impl_builder!(
     @GlobalImages
         /// Queries an image in by its id.
         => get [] -> GlobalImage = id,
+        /// Option to return the `environments` field on the `Image` struct.
         ?> with_envs ["envs"] -> v: bool,
+        /// Option to return the `user_ids` field on the `Image` struct.
         ?> with_user_ids ["user_ids"] -> v: bool,
     @GlobalImage
+        /// Option to return the `environments` field on the `Image` struct.
         ?> with_envs ["envs"] -> v: bool,
+        /// Option to return the `user_ids` field on the `Image` struct.
         ?> with_user_ids ["user_ids"] -> v: bool,
     @OrgImages
+        /// Option to return the `environments` field on the `Image` struct.
         ?> with_envs ["envs"] -> v: bool,
+        /// Option to return the `user_ids` field on the `Image` struct.
         ?> with_user_ids ["user_ids"] -> v: bool,
 );
 
