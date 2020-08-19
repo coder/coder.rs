@@ -46,18 +46,6 @@ pub struct ApiResponse<T: DeserializeOwned> {
     pub response: Result<T, ApiError>,
 }
 
-pub(crate) struct Builder {
-    pub url: Url,
-    pub req: Request<Body>,
-}
-
-impl Builder {
-    pub(crate) fn build(mut self) -> Request<Body> {
-        *self.req.uri_mut() = self.url.to_string().parse().unwrap();
-        self.req
-    }
-}
-
 #[derive(Deserialize, Debug)]
 pub struct ApiError(pub serde_json::Value);
 
@@ -70,6 +58,7 @@ pub trait Executor {
 
 impl Coder {
     /// Returns a populated request for creating custom queries.
+    #[inline]
     pub fn new_request(&self) -> Result<Request<Body>, Box<dyn Error>> {
         Ok(Request::builder()
             .method(hyper::Method::GET)

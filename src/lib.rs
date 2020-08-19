@@ -102,6 +102,7 @@
 
 #[macro_use]
 mod macros;
+mod builder;
 
 pub mod client;
 pub mod headers;

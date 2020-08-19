@@ -8,3 +8,11 @@ impl From<HeaderMap> for Headers {
         Headers(h)
     }
 }
+
+impl std::ops::Deref for Headers {
+    type Target = HeaderMap;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
