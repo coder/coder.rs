@@ -103,6 +103,7 @@
 #[macro_use]
 mod macros;
 mod builder;
+mod error;
 
 pub mod client;
 pub mod headers;
@@ -111,3 +112,4 @@ pub mod models;
 pub mod builders;
 
 pub use client::{Coder, Executor};
+pub use error::Error;

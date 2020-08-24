@@ -6,7 +6,6 @@ use hyper_tls;
 #[cfg(feature = "rust-native-tls")]
 type HttpsConnector = hyper_tls::HttpsConnector<hyper::client::HttpConnector>;
 
-use std::error::Error;
 use std::sync::Arc;
 
 use hyper::StatusCode;
@@ -14,10 +13,10 @@ use hyper::{self, Body};
 use hyper::{Client, Request};
 use url::Url;
 
+use crate::error::{ApiError, Error};
 use crate::headers::Headers;
 use async_trait::async_trait;
 use serde::de::DeserializeOwned;
-use serde::Deserialize;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
@@ -30,7 +29,7 @@ pub struct Coder {
 const API_PREFIX: &'static str = "/api";
 
 impl Coder {
-    pub fn new<T: ToString>(uri: String, token: T) -> Result<Self, Box<dyn Error>> {
+    pub fn new<T: ToString>(uri: String, token: T) -> Result<Self, Error> {
         Ok(Self {
             url: uri.parse::<Url>()?.join(API_PREFIX)?,
             token: Box::leak(token.to_string().into_boxed_str()),
@@ -46,20 +45,17 @@ pub struct ApiResponse<T: DeserializeOwned> {
     pub response: Result<T, ApiError>,
 }
 
-#[derive(Deserialize, Debug)]
-pub struct ApiError(pub serde_json::Value);
-
 #[async_trait]
 pub trait Executor {
     type T: DeserializeOwned;
 
-    async fn execute(self) -> Result<ApiResponse<Self::T>, Box<dyn Error>>;
+    async fn execute(self) -> Result<ApiResponse<Self::T>, Error>;
 }
 
 impl Coder {
     /// Returns a populated request for creating custom queries.
     #[inline]
-    pub fn new_request(&self) -> Result<Request<Body>, Box<dyn Error>> {
+    pub fn new_request(&self) -> Result<Request<Body>, Error> {
         Ok(Request::builder()
             .method(hyper::Method::GET)
             .uri(self.url.to_string())

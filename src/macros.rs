@@ -51,13 +51,13 @@ macro_rules! imports {
         use async_trait::async_trait;
         use hyper::client::Client;
         use paste::paste;
-        use std::error::Error;
         use std::sync::Arc;
         use std::sync::RwLock;
 
         use $crate::builder::Builder;
         use $crate::client::ApiResponse;
         use $crate::client::Executor;
+        use $crate::error::Error;
 
         // This is only used in the `impl_client!` macro.
         #[allow(unused_imports)]
@@ -79,10 +79,8 @@ macro_rules! imports {
 /// // Expands to ...
 ///
 /// pub struct UserBuilder { ... }
-/// unsafe impl Send for UserBuilder {}
 /// /// Documentation is passed through!
 /// pub struct UsersBuilder { ... }
-/// unsafe impl Send for UsersBuilder {}
 /// ```
 macro_rules! new_builder {
     ($(
@@ -92,10 +90,9 @@ macro_rules! new_builder {
         $(paste! {
             $(#[$doc])*
             pub struct [<$i Builder>] {
-                pub(crate) builder: Result<RwLock<Builder>, Box<dyn Error>>,
+                pub(crate) builder: Result<RwLock<Builder>, Error>,
                 pub(crate) client: Arc<Client<HttpsConnector>>,
             }
-            unsafe impl Send for [<$i Builder>] {}
         })*
     );
 }
@@ -147,7 +144,7 @@ macro_rules! exec {
             impl Executor for [<$i Builder>] {
                 type T = $t;
 
-                async fn execute(self) -> Result<ApiResponse<Self::T>, Box<dyn Error>> {
+                async fn execute(self) -> Result<ApiResponse<Self::T>, Error> {
                     let client = self.client;
                     let builder = self.builder?.into_inner().unwrap();
                     let req = builder.build();
@@ -159,7 +156,7 @@ macro_rules! exec {
                     let body = if parts.status.is_success() {
                         Ok(serde_json::from_slice::<Self::T>(&body)?)
                     } else {
-                        Err(serde_json::from_slice::<$crate::client::ApiError>(&body)?)
+                        Err(serde_json::from_slice::<$crate::error::ApiError>(&body)?)
                     };
 
                     Ok(ApiResponse {
